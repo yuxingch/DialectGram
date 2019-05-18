@@ -1,9 +1,9 @@
 import numpy as np
-from typing import List
+from typing import Iterable, Any
 
 class ModelBase():
 
-    def fit(self, docs : List[np.ndarray]) -> None:
+    def fit(self, docs : Iterable[Any]) -> None:
         raise NotImplementedError
 
     def transform(self, word : str) -> float:
