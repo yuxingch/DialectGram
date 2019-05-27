@@ -22,7 +22,8 @@ def load_textfile(path = "./data/USA_tokenized.txt"):
     with open(path) as f:
         for line in f:
             values = line.split("\t")
-            tweets_lst.append(values[-1].rstrip('\n'))
+            raw_text = values[-1].rstrip('\n')
+            tweets_lst.append(clean_tweets(raw_text))
     return tweets_lst
 
 
@@ -33,5 +34,5 @@ def clean_tweets(text):
     text = re.sub(r'@\w+', ' <user> ', text)
     ENCODE_EMOJI = re.compile('[\U00010000-\U0010ffff]', flags=re.UNICODE)  # emoji
     text = ENCODE_EMOJI.sub('', text)
-    text= re.sub(' +', ' ', text)
+    text = re.sub(' +', ' ', text)
     return text.strip().lower()
