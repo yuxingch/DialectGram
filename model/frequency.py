@@ -16,7 +16,11 @@ class FrequencyModel(ModelBase):
             for k, v in Counter(docs[i]).items():
                 if k != self.unk_ind:
                     term_raw_counts[k] += v
+        self.tf = {k:term_raw_counts[self._inv_vocab[k]] for k in self._inv_vocab}
         self.term_prob = term_raw_counts / np.sum(term_raw_counts)
 
-    def transform(self, word : str):
-        return self.term_prob[self._inv_vocab[word]]
+    def transform(self, word : str, log_prob = True):
+        if log_prob:
+            return np.log(self.term_prob[self._inv_vocab[word]])
+        else:
+            return self.term_prob[self._inv_vocab[word]]
