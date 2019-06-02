@@ -1,11 +1,19 @@
 import os
 from collections import defaultdict
 from copy import copy
+import random
 
 import numpy as np
 import torch
-from torch.utils.data import Dataset, Dataloader
+from torch.utils.data import Dataset
 from tqdm import tqdm
+
+
+def in_vocab(w, vocab):
+    if w in vocab:
+        return w
+    else:
+        return '<unk>'
 
 
 class TwitterCorpus:
@@ -15,9 +23,14 @@ class TwitterCorpus:
         self.uk_path = uk_path
         self.usa_corpus = self.load_textfile(path=self.usa_path)
         self.uk_corpus = self.load_textfile(path=self.uk_path)
-        self.word2id_usa, self.id2word_usa = self.tokenize(self.usa_corpus, freq=4)
-        self.word2id_uk, self.id2word_uk = self.tokenize(self.uk_corpus, freq=4)
+        self.get_all_tweets()
+        self.word2id_usa, self.id2word_usa, self.wordFreq_usa = self.tokenize(self.usa_corpus, freq=4)
+        self.word2id_uk, self.id2word_uk, self.wordFreq_uk = self.tokenize(self.uk_corpus, freq=4)
+        self.uk_word_count = len(self.word2id_uk)
+        self.usa_word_count = len(self.word2id_usa)
         self.get_global_vocab()
+        self.global_word_count = len(self.word2id_global)
+        self.generate_unigrams()
         # TODO
     
     def load_textfile(self, path = "./data/USA_tokenized.txt"):
@@ -27,6 +40,12 @@ class TwitterCorpus:
                 values = line.split("\t")
                 tweets_lst.append(values[-1].rstrip('\n'))
         return tweets_lst
+
+    def get_all_tweets(self):
+        all_tweets_temp = [t.lstrip().rstrip().split(" ") for t in self.usa_corpus]
+        self.usa_tweets = [t for t in all_tweets_temp if len(t) > 1]
+        all_tweets_temp = [t.lstrip().rstrip().split(" ") for t in self.uk_corpus]
+        self.uk_tweets  = [t for t in all_tweets_temp if len(t) > 1]
 
     def tokenize(self, docs, freq=1):
         "Tokenize each tweet and build up dictionary: wordID->embedding"
@@ -51,36 +70,101 @@ class TwitterCorpus:
                         id2word[idx] = w
                         idx += 1
         final_vocab_size = len(word2id)
+        wordFreq = {key:val for key, val in wordFreq.items() if val > freq}
+        wordFreq['<unk>'] = 1
         assert final_vocab_size == idx
         assert len(word2id) == len(id2word)
-        return word2id, id2word
+        assert len(wordFreq) == final_vocab_size
+        return word2id, id2word, wordFreq
 
     def get_global_vocab(self):
         self.word2id_global = copy(self.word2id_usa)
         self.id2word_global = copy(self.id2word_usa)
+        self.wordFreq_global = copy(self.wordFreq_usa)
         idx = len(self.word2id_global)
         for w, _ in self.word2id_uk.items():
             if w not in self.word2id_global:
                 self.word2id_global[w] = idx
                 self.id2word_global[idx] = w
-                self.idx += 1
+                idx += 1
+                self.wordFreq_global[w] = self.wordFreq_uk[w]
+            else:
+                self.wordFreq_global[w] += self.wordFreq_uk[w]
 
-    def sampleTokens(self):
-        # TODO
-        return
+    def generate_unigrams(self):
+        Z = 0.001
+        # uk
+        self.uk_unigram = []
+        num_total_words_uk = sum([c for _, c in self.wordFreq_uk.items()])
+        self.uk_vocab = [*self.word2id_uk]
+        for v in self.uk_vocab:
+            self.uk_unigram.extend([v] * int(((self.wordFreq_uk[v]/num_total_words_uk)**0.75)/Z))
+        # usa
+        self.usa_unigram = []
+        num_total_words_usa = sum([c for _, c in self.wordFreq_usa.items()])
+        self.usa_vocab = [*self.word2id_usa]
+        for v in self.usa_vocab:
+            self.usa_unigram.extend([v] * int(((self.wordFreq_usa[v]/num_total_words_usa)**0.75)/Z))
+        # global
+        # self.global_unigram = []
+        # num_total_words_global = sum([c for _, c in self.wordFreq_global.items()])
+        # self.global_vocab = [*self.word2id_global]
+        # for v in self.global_vocab:
+        #     self.global_unigram.extend([v] * int(((self.wordFreq_global[v]/num_total_words_global)**0.75)/Z))
 
+    def sample_negs(self, batch_size, num_negs, batch_target_input, region):
+        negs_regional = []
+        negs_global = []
+        region_unigram = None
+        region_word2id = None
+        if region == 'UK':
+            region_unigram = self.uk_unigram
+            region_word2id = self.word2id_uk
+        else:
+            region_unigram = self.usa_unigram
+            region_word2id = self.word2id_usa
+        for i in range(batch_size):
+            temp = random.sample(region_unigram, num_negs)
+            while batch_target_input[i] in temp:
+                temp = random.sample(region_unigram, num_negs)
+            negs_regional.append([region_word2id[w] for w in temp])
+            negs_global.append([self.word2id_global[w] for w in temp])
+        assert batch_size == len(negs_regional)
+        assert batch_size == len(negs_global)
+        return negs_regional, negs_global
 
-class Word2VecData(Dataset):
-
-    def __init__(self, tweets, window_size):
-        self.tweets = tweets
-        self.window_size = window_size
-    
-    def __len__(self):
-        return len(tweets)
-
-    def __getitem__(self, idx):
-        curr_tweet = self.tweets[idx]
-        words = curr_tweet.split(" ")
-        # TODO
-        
+    def batch_sampler(self, batch_size, window_size=2):
+        region_ID = random.randint(0, 1)
+        if region_ID:
+            region_tweets = self.usa_tweets
+            geo_tag = 'US'
+            vocab = self.usa_vocab
+        else:
+            region_tweets = self.uk_tweets
+            geo_tag = 'UK'
+            vocab = self.uk_vocab
+        selected_list = []
+        while len(selected_list) < batch_size:
+            tweet_id = random.randint(0, len(region_tweets)-1)
+            tokenized_tweet = region_tweets[tweet_id]
+            center_word_id = random.randint(0, len(tokenized_tweet)-1)
+            center_word = tokenized_tweet[center_word_id]
+            center_word = in_vocab(center_word, vocab)
+            context = tokenized_tweet[max(0, center_word_id-window_size):center_word_id]
+            if center_word_id+1 < len(tokenized_tweet):
+                context += tokenized_tweet[center_word_id+1:min(len(tokenized_tweet), center_word_id+window_size+1)]
+            context = [in_vocab(w, vocab) for w in context]
+            context = [w for w in context if w != center_word]
+            remain = batch_size - len(selected_list)
+            if remain > len(context):
+                selected_list += [(center_word, context_word) for context_word in context]
+            else:
+                selected_list += [(center_word, context_word) for context_word in random.sample(context, remain)]
+            selected_list = list(set(selected_list))
+        assert len(selected_list) == batch_size
+        batch_center_word = []
+        batch_context_word = []
+        for (center, context) in selected_list:
+            batch_center_word.append(center)
+            batch_context_word.append(context)
+        return batch_center_word, batch_context_word, geo_tag
