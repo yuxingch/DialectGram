@@ -34,7 +34,7 @@ test_word = eval_test["word"].tolist()
 test_label = eval_test["label"].tolist()
 pred = np.array([score(w, models) for w in train_word])
 
-linspace = np.linspace(0, 10, 10000)
+linspace = np.linspace(0, 0.5, 1000)
 accs = []
 for t in linspace:
     accs.append(acc(train_label, pred > t))
