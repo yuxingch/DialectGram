@@ -92,22 +92,35 @@ class SkipGram(nn.Module):
 
         neg_score = torch.bmm(neg_combined_emb_batch, center_combined_emb_batch.unsqueeze(2)).squeeze()
         neg_score = torch.clamp(neg_score, max=10, min=-10)
-        neg_score = -torch.sum(self.logsigmoid(-neg_score), dim=1)
+        neg_score = torch.sum(self.logsigmoid(-neg_score), dim=1)
+        # neg_score = self.logsigmoid(-torch.sum(neg_score, dim=1))
 
         score = positive_score + neg_score
-        return torch.mean(score)
+        return -torch.mean(score)
 
-    def predict(self, word):
+    def predict(self, word, A):
+        global_emb = None
+        uk_emb = None
+        usa_emb = None
+        # if the regions (A) are given:
+        if A is not None:
+            global_emb = self.u_global_emb(self._tensor(self.word2id_global[word]))
+            if 'uk' in A:
+                uk_emb = self.u_uk_emb(self._tensor(self.word2id_uk[word]))
+            if 'usa' in A:
+                usa_emb = self.u_usa_emb(self._tensor(self.word2id_usa[word]))
+            return global_emb, usa_emb, uk_emb
+        # if not given regions (A)
         if word not in self.global_vocab:
-            global_emb = self.u_global_emb(self.word2id_global['<unk>'])
+            global_emb = self.u_global_emb(self._tensor(self.word2id_global['<unk>']))
         else:
             global_emb = self.u_global_emb(self.word2id_global[word])
         if word not in self.uk_vocab:
-            uk_emb = self.u_uk_emb(self.word2id_uk['<unk>'])
+            uk_emb = self.u_uk_emb(self._tensor(self.word2id_uk['<unk>']))
         else:
-            uk_emb = self.u_uk_emb(self.word2id_uk[word])
+            uk_emb = self.u_uk_emb(self._tensor(self.word2id_uk[word]))
         if word not in self.usa_vocab:
-            usa_emb = self.u_usa_emb(self.word2id_usa['<unk>'])
+            usa_emb = self.u_usa_emb(self._tensor(self.word2id_usa['<unk>']))
         else:
-            usa_emb = self.u_usa_emb(self.word2id_usa[word])
+            usa_emb = self.u_usa_emb(self._tensor(self.word2id_usa[word]))
         return global_emb, usa_emb, uk_emb

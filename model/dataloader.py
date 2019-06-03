@@ -2,6 +2,7 @@ import os
 from collections import defaultdict
 from copy import copy
 import random
+import re
 
 import numpy as np
 import torch
@@ -24,21 +25,34 @@ class TwitterCorpus:
         self.usa_corpus = self.load_textfile(path=self.usa_path)
         self.uk_corpus = self.load_textfile(path=self.uk_path)
         self.get_all_tweets()
-        self.word2id_usa, self.id2word_usa, self.wordFreq_usa = self.tokenize(self.usa_corpus, freq=4)
-        self.word2id_uk, self.id2word_uk, self.wordFreq_uk = self.tokenize(self.uk_corpus, freq=4)
+        self.word2id_usa, self.id2word_usa, self.wordFreq_usa = self.tokenize(self.usa_corpus, freq=9)
+        self.word2id_uk, self.id2word_uk, self.wordFreq_uk = self.tokenize(self.uk_corpus, freq=9)
         self.uk_word_count = len(self.word2id_uk)
         self.usa_word_count = len(self.word2id_usa)
         self.get_global_vocab()
         self.global_word_count = len(self.word2id_global)
         self.generate_unigrams()
-        # TODO
+        self.global_vocab = [*self.word2id_global]
+        self.build_regional_global_lookup()
+        print('word count:', self.uk_word_count, self.usa_word_count)
+
+    def build_regional_global_lookup(self):
+        print('Building lookup table...')
+        self.uk_global_lookup = []
+        self.usa_global_lookup = []
+        for uk_v in self.uk_vocab:
+            self.uk_global_lookup.append(self.global_vocab.index(uk_v))
+        for usa_v in self.usa_vocab:
+            self.usa_global_lookup.append(self.global_vocab.index(usa_v))
     
     def load_textfile(self, path = "./data/USA_tokenized.txt"):
         tweets_lst = []
         with open(path) as f:
             for line in f:
                 values = line.split("\t")
-                tweets_lst.append(values[-1].rstrip('\n'))
+                temp = values[-1].rstrip('\n')
+                clean = re.sub(r"[,.;:@#?!&$”\"\-]+\ *", " ", temp)
+                tweets_lst.append(clean)
         return tweets_lst
 
     def get_all_tweets(self):
@@ -64,13 +78,13 @@ class TwitterCorpus:
         for tweet in tqdm(docs, total=docs_size):
             words = tweet.lstrip().rstrip().split(" ")
             for w in words:
-                if wordFreq[w] > freq:
+                if w and wordFreq[w] > freq:
                     if w not in word2id:
                         word2id[w] = idx
                         id2word[idx] = w
                         idx += 1
         final_vocab_size = len(word2id)
-        wordFreq = {key:val for key, val in wordFreq.items() if val > freq}
+        wordFreq = {key:val for key, val in wordFreq.items() if key and val > freq}
         wordFreq['<unk>'] = 1
         assert final_vocab_size == idx
         assert len(word2id) == len(id2word)
