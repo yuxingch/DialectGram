@@ -5,8 +5,11 @@ PyTorch version for GEODIST: the computational approach for tracking and detecti
 - Code for learning geographically-informed word embeddings: https://github.com/dbamman/geoSGLM
 
 
-### TODO
-- Baseline Model
+### DONE
+- Baseline Models
   - Frequencies Model
   - Syntactic Model
-- GEODIST Model
+- GEODIST Model (`train`/`vector`(get embeddings for a word)/`neighbors`)
+
+### TODO
+- `ScoreSignificance` method
