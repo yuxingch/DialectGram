@@ -2,6 +2,7 @@ import pandas as pd
 from collections import Counter
 from scipy.io import loadmat
 import re
+import numpy as np
 
 def load_mat_data(path ="./data/data.mat"):
     return loadmat(path)
@@ -36,3 +37,18 @@ def clean_tweets(text):
     text = ENCODE_EMOJI.sub('', text)
     text = re.sub(' +', ' ', text)
     return text.strip().lower()
+
+
+def vec2dict(src_filename):
+    data = {}
+    with open(src_filename) as f:
+        while True:
+            try:
+                line = next(f)
+                line = line.strip().split()
+                data[line[0]] = np.array(line[1: ], dtype=np.float)
+            except StopIteration:
+                break
+            except UnicodeDecodeError:
+                pass
+    return data
