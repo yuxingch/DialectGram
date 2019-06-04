@@ -52,3 +52,15 @@ def vec2dict(src_filename):
             except UnicodeDecodeError:
                 pass
     return data
+
+
+def print_stats(pred, truth):
+    assert len(pred) == len(truth)
+    length = len(pred)
+    acc = sum([i == j for i, j in zip(pred, truth)]) / length
+    precision = sum([i == 1 and j == 1 for i, j in zip(pred, truth)]) / length
+    recall = sum([i == 0 and j == 0 for i, j in zip(pred, truth)]) /  length
+    f1 = 2 * precision * recall / (precision + recall)
+    print("Accuracy \t= %f\nPrecision \t= %f\nRecall   \t= %f\nF1 score \t= %f" %
+          (acc, precision, recall, f1))
+

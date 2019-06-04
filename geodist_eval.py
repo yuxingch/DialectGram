@@ -38,4 +38,7 @@ plt.show()
 
 t = linspace[np.argmax(accs)]
 print("Train Acc = %f" % acc(train_label, pred > t))
-print("Test Acc = %f" % acc(test_label, np.array([score(w, us_dict, uk_dict) for w in test_word]) > t))
+print("Training stats:")
+util.print_stats(pred > t, train_label)
+print("Testing stats:")
+util.print_stats(np.array([score(w, us_dict, uk_dict) for w in test_word]) > t, test_label)
