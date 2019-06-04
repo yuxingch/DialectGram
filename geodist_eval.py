@@ -37,7 +37,6 @@ plt.ylabel("Acc on training set")
 plt.show()
 
 t = linspace[np.argmax(accs)]
-print("Train Acc = %f" % acc(train_label, pred > t))
 print("Training stats:")
 util.print_stats(pred > t, train_label)
 print("Testing stats:")
