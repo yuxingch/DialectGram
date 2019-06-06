@@ -19,14 +19,15 @@ def in_vocab(w, vocab):
 
 class TwitterCorpus:
 
-    def __init__(self, usa_path, uk_path):
+    def __init__(self, usa_path, uk_path, freq):
         self.usa_path = usa_path
         self.uk_path = uk_path
+        self.freq = freq
         self.usa_corpus = self.load_textfile(path=self.usa_path)
         self.uk_corpus = self.load_textfile(path=self.uk_path)
         self.get_all_tweets()
-        self.word2id_usa, self.id2word_usa, self.wordFreq_usa = self.tokenize(self.usa_corpus, freq=9)
-        self.word2id_uk, self.id2word_uk, self.wordFreq_uk = self.tokenize(self.uk_corpus, freq=9)
+        self.word2id_usa, self.id2word_usa, self.wordFreq_usa = self.tokenize(self.usa_corpus, freq=self.freq)
+        self.word2id_uk, self.id2word_uk, self.wordFreq_uk = self.tokenize(self.uk_corpus, freq=self.freq)
         self.uk_word_count = len(self.word2id_uk)
         self.usa_word_count = len(self.word2id_usa)
         self.get_global_vocab()
@@ -44,8 +45,8 @@ class TwitterCorpus:
             self.uk_global_lookup.append(self.global_vocab.index(uk_v))
         for usa_v in self.usa_vocab:
             self.usa_global_lookup.append(self.global_vocab.index(usa_v))
-    
-    def load_textfile(self, path = "./data/USA_tokenized.txt"):
+
+    def load_textfile(self, path="./data/USA_tokenized.txt"):
         tweets_lst = []
         with open(path) as f:
             for line in f:
@@ -59,9 +60,9 @@ class TwitterCorpus:
         all_tweets_temp = [t.lstrip().rstrip().split(" ") for t in self.usa_corpus]
         self.usa_tweets = [t for t in all_tweets_temp if len(t) > 1]
         all_tweets_temp = [t.lstrip().rstrip().split(" ") for t in self.uk_corpus]
-        self.uk_tweets  = [t for t in all_tweets_temp if len(t) > 1]
+        self.uk_tweets = [t for t in all_tweets_temp if len(t) > 1]
 
-    def tokenize(self, docs, freq=1):
+    def tokenize(self, docs, freq):
         "Tokenize each tweet and build up dictionary: wordID->embedding"
         wordFreq = defaultdict(int)
         word2id = defaultdict(int)
@@ -84,7 +85,7 @@ class TwitterCorpus:
                         id2word[idx] = w
                         idx += 1
         final_vocab_size = len(word2id)
-        wordFreq = {key:val for key, val in wordFreq.items() if key and val > freq}
+        wordFreq = {key: val for key, val in wordFreq.items() if key and val > freq}
         wordFreq['<unk>'] = 1
         assert final_vocab_size == idx
         assert len(word2id) == len(id2word)
@@ -119,12 +120,6 @@ class TwitterCorpus:
         self.usa_vocab = [*self.word2id_usa]
         for v in self.usa_vocab:
             self.usa_unigram.extend([v] * int(((self.wordFreq_usa[v]/num_total_words_usa)**0.75)/Z))
-        # global
-        # self.global_unigram = []
-        # num_total_words_global = sum([c for _, c in self.wordFreq_global.items()])
-        # self.global_vocab = [*self.word2id_global]
-        # for v in self.global_vocab:
-        #     self.global_unigram.extend([v] * int(((self.wordFreq_global[v]/num_total_words_global)**0.75)/Z))
 
     def sample_negs(self, batch_size, num_negs, batch_target_input, region):
         negs_regional = []

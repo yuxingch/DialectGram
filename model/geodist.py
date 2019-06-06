@@ -26,12 +26,13 @@ def build_state_dict(config_net):
 
 class GeodistModel(ModelBase):
 
-    def __init__(self, usa_path, uk_path, batch_size, window_size, runs=MAX_STEPS,
+    def __init__(self, usa_path, uk_path, batch_size, window_size, freq=20, runs=MAX_STEPS,
                  emb_dim=DEFAULT_EMB_DIM, lr=0.01, anneal_rate=0.9, model_dir='./outputs'):
         self.usa_path = usa_path
         self.uk_path = uk_path
         self.batch_size = batch_size
         self.window_size = window_size
+        self.freq = freq
         self.max_steps = runs
         self.emb_dim = emb_dim
         self.lr = lr
@@ -39,7 +40,7 @@ class GeodistModel(ModelBase):
         self.model_dir = model_dir
         self.vector_dir = os.path.join(self.model_dir, 'vectors')
         mkdir_p(self.model_dir)
-        self.corpus = TwitterCorpus(self.usa_path, self.uk_path)
+        self.corpus = TwitterCorpus(self.usa_path, self.uk_path, self.freq)
         self.load_skipgram()
 
     def load_skipgram(self):
@@ -58,7 +59,7 @@ class GeodistModel(ModelBase):
             start_t = time.time()
             batch_center_word, batch_context_word, geo_tag = self.corpus.batch_sampler(self.batch_size, self.window_size)
             negs_regional, negs_global = self.corpus.sample_negs(self.batch_size, 20, batch_center_word, geo_tag)
-            
+
             if step % 1000 == 0:
                 # update learning rate
                 lr *= self.anneal_rate
@@ -69,16 +70,17 @@ class GeodistModel(ModelBase):
             loss = self.word2vec(batch_center_word, batch_context_word, geo_tag, negs_regional, negs_global)
             loss.backward()
             optimizer.step()
-            
+
             avg_loss += loss.item()
             if step % 500 == 0:
                 avg_loss /= 500
                 avg_loss_history.append(avg_loss)
                 print(f'Average loss at step {step} is {avg_loss:.4f}')
                 avg_loss = 0
-            if step % 2000 == 0:
-                self.neighbors('flat')
+            # if step % 2000 == 0:
+            #     self.neighbors('flat')
             if step % 4000 == 0:
+                print(f'====      Finished running {step} steps      ====')
                 self.save_model(self.model_dir, step)
                 self.save_vectors(self.vector_dir, step)
             step += 1
