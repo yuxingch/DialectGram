@@ -7,7 +7,7 @@ PyTorch version for GEODIST: the computational approach for tracking and detecti
 We also include the baslien models and AdaGram model that are used in our project.
 
 ## Dataset
-Twitter corpus (Geo-Tweets2019) used in this project can be found at [dialectMap](https://github.com/emoryjianghang/dialectMap).
+Twitter corpus (Geo-Tweets2019) used in this project can be found at [Geo-Twitter2019](https://github.com/emoryjianghang/Geo-Twitter2019).
 
 ## Models
 - Baseline Models
