@@ -10,6 +10,4 @@ PyTorch version for GEODIST: the computational approach for tracking and detecti
   - Frequencies Model
   - Syntactic Model
 - GEODIST Model (`train`/`vector`(get embeddings for a word)/`neighbors`)
-
-### TODO
-- `ScoreSignificance` method
+- Evaluations
