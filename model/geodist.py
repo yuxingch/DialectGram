@@ -60,7 +60,7 @@ class GeodistModel(ModelBase):
             batch_center_word, batch_context_word, geo_tag = self.corpus.batch_sampler(self.batch_size, self.window_size)
             negs_regional, negs_global = self.corpus.sample_negs(self.batch_size, 20, batch_center_word, geo_tag)
 
-            if step % 1000 == 0:
+            if step % 5000 == 0:
                 # update learning rate
                 lr *= self.anneal_rate
                 print(f'learning rate updated: {lr}')

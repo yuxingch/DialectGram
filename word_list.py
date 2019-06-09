@@ -4,13 +4,18 @@ import random
 import re
 import util
 
+
+# regexp = re.compile('[,.;:@#?!&$”\"\-]+')
+SPECIAL = ",.;:@#?!&$”\"\-"
 inverted_vocabs = {}
 for c in ["UK", "USA"]:
     data = list(map(str, util.load_data("./data/%s_tokenized.txt" % c)[5].tolist()))
-    vocab = util.build_vocab(data)
+    vocab = util.build_vocab(data, least_freq=21)
     inverted_vocabs[c] = {k: v for v, k in enumerate(vocab)}
 
+print("start joint_vocab")
 joint_vocab = set(inverted_vocabs["UK"].keys()) & set(inverted_vocabs["USA"].keys())
+joint_vocab = {w for w in joint_vocab if not any(special in w for special in SPECIAL)}
 word_list = pd.read_csv("./data/word_list.csv", encoding="gbk")
 
 # Clean word list
@@ -21,6 +26,7 @@ for i in range(len(words)):
     words[i] = re.sub("\r\n", ",", words[i])
     words[i] = re.sub(" ", "", words[i])
 word_list["Word"] = words
+
 
 # Match joint words
 def contains(s, key):
@@ -36,8 +42,8 @@ for w in word_list["Word"]:
 
 pos_set = filtered_set
 neg_set = set()
-while len(pos_set) + len(neg_set) < 1000:
-    sample = random.sample(joint_vocab, 1000 - len(pos_set) - len(neg_set))
+while len(pos_set) > len(neg_set):
+    sample = random.sample(joint_vocab, len(pos_set) - len(neg_set))
     sample = set(filter(lambda x : x not in pos_set, sample))
     neg_set.update(sample)
 
@@ -54,5 +60,5 @@ test_data = pd.DataFrame.from_dict({
     "word" : word_test,
     "label" : label_test,
 })
-train_data.to_csv("./data/eval_train.csv", index=False)
-test_data.to_csv("./data/eval_test.csv", index=False)
+train_data.to_csv("./data/eval_train_badfreq.csv", index=False)
+test_data.to_csv("./data/eval_test_badfreq.csv", index=False)
