@@ -8,7 +8,7 @@ PyTorch version for GEODIST: the computational approach for tracking and detecti
 
 ## Dataset
 ### Geo-Tweets2019
-The new English Twitter corpus (Geo-Tweets2019) used in this project can be found at [Geo-Twitter2019](https://github.com/emoryjianghang/Geo-Twitter2019), which is built for training dialect-sensitive word embeddings.
+The new English Twitter corpus (Geo-Tweets2019) used in this project can be found at [Geo-Twitter2019](https://github.com/hjian42/Geo-Twitter2019), which is built for training dialect-sensitive word embeddings.
 
 ### DialectSim
 A new validation set for evaluating the quality of English region-specific word embeddings between the UK and the USA (i.e. at the country level). Can be found at `./data/DialectSim_{train,test}.csv` in this repository.
@@ -28,7 +28,7 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis. To appear in *Proceedings of the Society for Computation in Linguistics*. New Orleans: Linguistic Society of America. 
 
 ```
-@inproceedings{Jiang:Hong:Chen:2020:SCiL,
+@inproceedings{Jiang:Hong:Chen:Kulkarni:2020:SCiL,
   Author = {Jiang, Hang  and  Hong, Haoshen  and  Chen, Yuxing  and  Kulkarni, Vivek},
   Title = {DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis},
   Booktitle = {Proceedings of the Society for Computation in Linguistics},
