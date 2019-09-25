@@ -25,8 +25,8 @@ for country in ["UK", "USA"]:
     model.fit(docs)
     models[country] = model
 
-eval_train = pd.read_csv("./data/eval_train.csv")
-eval_test = pd.read_csv("./data/eval_test.csv")
+eval_train = pd.read_csv("./data/DialectSim_train.csv")
+eval_test = pd.read_csv("./data/DialectSim_test.csv")
 
 train_word = eval_train["word"].tolist()
 train_label = eval_train["label"].tolist()

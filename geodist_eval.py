@@ -27,8 +27,8 @@ def manhattan_distance(w, us, uk):
         return random.random()
     return sum(abs(a-b) for a, b in zip(us[w], uk[w]))
 
-eval_train = pd.read_csv("./data/eval_train_badfreq.csv")
-eval_test = pd.read_csv("./data/eval_test_badfreq.csv")
+eval_train = pd.read_csv("./data/DialectSim_train.csv")
+eval_test = pd.read_csv("./data/DialectSim_test.csv")
 
 train_word = eval_train["word"].tolist()
 train_label = eval_train["label"].tolist()

@@ -25,7 +25,7 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 
 
 ## Citation
-Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis. To appear in Proceedings of the Society for Computation in Linguistics. New Orleans: Linguistic Society of America. 
+Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis. To appear in *Proceedings of the Society for Computation in Linguistics*. New Orleans: Linguistic Society of America. 
 
 ```
 @inproceedings{Jiang:Hong:Chen:2020:SCiL,

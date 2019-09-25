@@ -1,4 +1,4 @@
-from model import AdaGramModel
+from model import DialectGramModel
 import util
 import numpy as np
 import pandas as pd
@@ -16,28 +16,28 @@ with open("data/UK_tokenized.txt") as uk_f, open("data/USA_tokenized.txt") as us
 
 model_path = "pretrained/usa_uk_05_27_trial1.joblib"
 
-uk_adagram = AdaGramModel(model_path)
-uk_adagram.fit([tweet_geo[0] for tweet_geo in uk_tweets_geos])
+uk_dialectgram = DialectGramModel(model_path)
+uk_dialectgram.fit([tweet_geo[0] for tweet_geo in uk_tweets_geos])
 
-usa_adagram = AdaGramModel(model_path)
-usa_adagram.fit([tweet_geo[0] for tweet_geo in usa_tweets_geos])
+usa_dialectgram = DialectGramModel(model_path)
+usa_dialectgram.fit([tweet_geo[0] for tweet_geo in usa_tweets_geos])
 
 select_words = ['buffalo', 'trainer', 'test', 'gas', 'subway', 'underground', 'flat']
 for word in select_words:
     filename = './output/{}.csv'.format(word)
-    show_in_uk_tweets = uk_adagram.index.get_sentences(word)
-    show_in_usa_tweets = usa_adagram.index.get_sentences(word)
+    show_in_uk_tweets = uk_dialectgram.index.get_sentences(word)
+    show_in_usa_tweets = usa_dialectgram.index.get_sentences(word)
     df_lines = []
     print("Processing word [{}]".format(word))
     for idx in show_in_uk_tweets:
         context, xy = uk_tweets_geos[idx]
-        proba = uk_adagram.predict_proba(word, context)
+        proba = uk_dialectgram.predict_proba(word, context)
         line = [xy, context, proba, 'uk']
         df_lines.append(line)
     print("Add {} UK sentences".format(len(show_in_uk_tweets)))
     for idx in show_in_usa_tweets:
         context, xy = usa_tweets_geos[idx]
-        proba = usa_adagram.predict_proba(word, context)
+        proba = usa_dialectgram.predict_proba(word, context)
         line = [xy, context, proba, 'usa']
         df_lines.append(line)
     print("Add {} USA sentences".format(len(show_in_usa_tweets)))

@@ -3,7 +3,8 @@ from tqdm import tqdm
 from model.base import ModelBase
 import adagram
 
-class AdaGramModel(ModelBase):
+
+class DialectGramModel(ModelBase):
     """Transforms a word to a weighted vector representation in a country
 
     """
@@ -20,7 +21,7 @@ class AdaGramModel(ModelBase):
         self.dim = self.vm.dim
 
     def fit(self, docs):
-        
+
         self.tweets = docs
         for i, tweet in enumerate(docs):
             self.index.add_sentence(tweet, i)
@@ -136,8 +137,3 @@ class Index:
 
     def get_sentences(self, word):
         return self.word2sentIDs[word] if word in self.word2sentIDs else []
-
-
-
-
-

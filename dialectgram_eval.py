@@ -1,4 +1,4 @@
-from model import AdaGramModel
+from model import DialectGramModel
 import util
 import numpy as np
 import pandas as pd
@@ -36,8 +36,8 @@ def manhattan_distance(w, us, uk):
         return random()
     return sum(abs(a-b) for a,b in zip(us[w], uk[w]))
 
-df_train = pd.read_csv('data/eval_train_21_balance.csv')
-df_test = pd.read_csv('data/eval_test_21_balance.csv')
+df_train = pd.read_csv('data/DialectSim_train.csv')
+df_test = pd.read_csv('data/DialectSim_test.csv.csv')
 train_words = df_train['word'].tolist()[:]
 train_labels = df_train['label'].tolist()[:]
 test_words = df_test['word'].tolist()[:]
@@ -45,8 +45,8 @@ test_labels = df_test['label'].tolist()[:]
 
 print(df_train.head())
 
-usa_dict_file = 'usa_dict_balance.pickle'
-uk_dict_file = 'uk_dict_balance.pickle'
+usa_dict_file = 'usa_dict_DialectSim_trial1.pickle'
+uk_dict_file = 'uk_dict_DialectSim_trial1.pickle'
 
 if os.path.isfile(usa_dict_file) and os.path.isfile(uk_dict_file):
     with open(usa_dict_file, 'rb') as handle:
@@ -58,18 +58,18 @@ else:
         uk_tweets = list(map(lambda x: x.split('\t')[-1].strip(), uk_f))
         usa_tweets = list(map(lambda x: x.split('\t')[-1].strip(), usa_f))
 
-    model_path = "pretrained/usa_uk_05_27_trial1.joblib"
+    model_path = "pretrained/trial1.joblib"
 
-    uk_adagram = AdaGramModel(model_path)
-    uk_adagram.fit(uk_tweets)
+    uk_dialectgram = DialectGramModel(model_path)
+    uk_dialectgram.fit(uk_tweets)
 
-    usa_adagram = AdaGramModel(model_path)
-    usa_adagram.fit(usa_tweets)
+    usa_dialectgram = DialectGramModel(model_path)
+    usa_dialectgram.fit(usa_tweets)
 
-    # print(uk_adagram.transform(train_words[0]))
+    # print(uk_dialectgram.transform(train_words[0]))
 
-    us_dict = {k : usa_adagram.greedy_transform(k) for k in tqdm(train_words + test_words, desc="US")}
-    uk_dict = {k : uk_adagram.greedy_transform(k) for k in tqdm(train_words + test_words, desc="UK")}
+    us_dict = {k : usa_dialectgram.greedy_transform(k) for k in tqdm(train_words + test_words, desc="US")}
+    uk_dict = {k : uk_dialectgram.greedy_transform(k) for k in tqdm(train_words + test_words, desc="UK")}
 
     with open(usa_dict_file, 'wb') as handle:
         pickle.dump(us_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
