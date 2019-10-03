@@ -28,6 +28,7 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 ## Requirements
 ### Baseline Models
 - cycler          0.10.0 
+- folium          0.10.0
 - joblib          0.13.2 
 - kiwisolver      1.1.0  
 - matplotlib      3.1.0  
@@ -49,7 +50,7 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 - wheel           0.33.4
 
 ### DialectGram
-- [Julia](https://github.com/JuliaLang/julia)
+- [Julia](https://github.com/JuliaLang/julia) 0.4
 - To run DialectGram model, we need to install Python-AdaGram package from source:
   ```
   $ pip install Cython numpy
@@ -60,6 +61,10 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
   Pkg.clone("https://github.com/sbos/AdaGram.jl.git")
   Pkg.build("AdaGram")
   ```
+
+## Sample Usage
+[TODO]
+
 
 ## Citation
 Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis. To appear in *Proceedings of the Society for Computation in Linguistics*. New Orleans: Linguistic Society of America. 
