@@ -6,7 +6,7 @@
 We propose **DialectGram**, a method to detect dialectical variation across multiple geographic resolutions. In contrast to prior work, which requires apriori knowledge of the geographic resolution and the set of regions,  DialectGram automatically infers dialect-sensitive senses without these constraints using a nonparametric Bayesian extension of Skip-gram. Consequently, DialectGram only needs one-time training to enable an analysis of dialectical variation at multiple resolutions. To validate our approach, and establish a quantitative benchmark, we create a new corpus Geo-Tweets2019 with English tweets from the US and the UK, and new validation set DialectSim for evaluating word embeddings in American and British English. 
 
 ## Visualization Demo
-[TODO]
+You can visualize our word maps here: [demo](https://yuxingch.github.io/DialectGram/demo/main.html)
 
 ## Dataset
 ### Geo-Tweets2019
