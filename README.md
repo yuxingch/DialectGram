@@ -16,11 +16,11 @@ The new English Twitter corpus (Geo-Tweets2019) used in this project can be foun
 A new validation set for evaluating the quality of English region-specific word embeddings between the UK and the USA (i.e. at the country level). Can be found at `./data/DialectSim_{train,test}.csv` in this repository.
 
 ## Models
-We include the baseline models (Frequency/Syntactic/GEODIST) and DialectGram model that are used in our project.
+We include the baseline models (`Frequency`/`Syntactic`/`GEODIST`) and `DialectGram` model that are used in our project.
 ### Baseline Models
-  - Frequency Model
-  - Syntactic Model
-  - GEODIST Model: a model to learn region-specific word embeddings using the Skip-gram framework. We implemented this model in PyTorch, based on the approach presented in [Freshman or Fresher? Quantifying the Geographic Variation of Language in Online Social Media](https://arxiv.org/pdf/1510.06786.pdf) and the [Java code](https://github.com/dbamman/geoSGLM) for learning geographically-informed word embeddings. 
+  - `Frequency` Model
+  - `Syntactic` Model
+  - `GEODIST` Model: a model to learn region-specific word embeddings using the Skip-gram framework. We implemented this model in PyTorch, based on the approach presented in [Freshman or Fresher? Quantifying the Geographic Variation of Language in Online Social Media](https://arxiv.org/pdf/1510.06786.pdf) and the [Java code](https://github.com/dbamman/geoSGLM) for learning geographically-informed word embeddings. 
 
 ### DialectGram Model 
 A novel method to learn dialect-sensitive word embeddings from region-agnostic data, based on AdaGram \[[1](https://github.com/sbos/AdaGram.jl), [2](https://github.com/lopuhin/python-adagram)\].
@@ -51,7 +51,7 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 
 ### DialectGram
 - [Julia](https://github.com/JuliaLang/julia) 0.4
-- To run DialectGram model, we need to install Python-AdaGram package from source:
+- To run `DialectGram` model, we need to install Python-AdaGram package from source:
   ```
   $ pip install Cython numpy
   $ pip install git+https://github.com/lopuhin/python-adagram.git
@@ -63,7 +63,38 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
   ```
 
 ## Sample Usage
-[TODO]
+### Baseline Models
+For `Frequency` and `Syntactic` models, we can build and directly evaluate them using `{freq,synt}_eval.py`:
+```
+# Frequency model
+python freq_eval.py
+
+# Syntactic model
+python synt_eval.py
+```
+If we want to investigate a specific word, run:
+```
+# Frequency model
+python frequencies.py "word_we_want_to_test"
+
+# Syntactic model
+python syntactic.py "word_we_want_to_test"
+```
+
+#### Training `GEODIST`
+```
+# using default parameters
+python geodist_run.py
+
+# or, we can specify the values of the following parameters:
+python geodist_run.py --batch=128 --window=10 --freq=20 --step=80000 --dim=100 --lr=0.05 --dir='./outputs'
+```
+#### Evaluating `GEODIST`
+```
+python geodist_eval.py
+```
+
+### `DialectGram`
 
 
 ## Citation

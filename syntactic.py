@@ -1,8 +1,15 @@
+import sys
 import util
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from model import FrequencyModel
+
+
+# word we want to investigate, default: "sort"
+w = "sort"
+if len(sys.argv) == 2:
+    w = sys.argv[1]
 
 models = {}
 for country in ["UK", "USA"]:
@@ -22,6 +29,8 @@ for country in ["UK", "USA"]:
     model.fit(docs)
     models[country] = model
 
+# Example
 for c in models.keys():
-    print("In %s, syntactic freq of 'fuck_NN' = %f" % (c, models[c].transform("fuck_NN")))
-    print("In %s, syntactic freq of 'fuck_VB' = %f" % (c, models[c].transform("fuck_VB")))
+    print("In %s, syntactic freq of '%s_N' = %f" % (c, w, models[c].transform("%s_N" % w)))
+    print("In %s, syntactic freq of '%s_V' = %f" % (c, w, models[c].transform("%s_V" % w)))
+    print("In %s, syntactic freq of '%s_A' = %f" % (c, w, models[c].transform("%s_A" % w)))

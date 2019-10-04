@@ -41,10 +41,6 @@ plain_global_dict = util.vec2dict("./outputs/vectors/global_vector_step_24000.tx
 us_dict = {k: v + plain_global_dict[k] for k, v in plain_us_dict.items()}
 uk_dict = {k: v + plain_global_dict[k] for k, v in plain_uk_dict.items()}
 
-# TODO: Remove this
-# us_dict = {k : np.random.rand(666) for k in train_word + test_word}
-# uk_dict = {k : np.random.rand(666) for k in train_word + test_word}
-
 pred = np.array([manhattan_distance(str(w), us_dict, uk_dict) for w in tqdm(train_word, desc="Geodist")])
 
 linspace = np.linspace(min(pred), max(pred), 1000)

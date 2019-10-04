@@ -6,6 +6,7 @@ from tqdm import tqdm
 from model import FrequencyModel
 from sklearn.metrics import accuracy_score as acc
 
+
 def score(w, models, log_prob=True):
     raw = models["UK"].transform(w, log_prob=log_prob) / models["USA"].transform(w, log_prob=log_prob)
     return max(raw, 1 / raw) - 1

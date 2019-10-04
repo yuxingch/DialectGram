@@ -1,8 +1,15 @@
+import sys
 import util
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from model import FrequencyModel
+
+
+# word we want to investigate, default: "queue"
+w = "queue"
+if len(sys.argv) == 2:
+    w = sys.argv[1]
 
 models = {}
 for country in ["UK", "USA"]:
@@ -19,5 +26,6 @@ for country in ["UK", "USA"]:
     model.fit(docs)
     models[country] = model
 
+# Example
 for c in models.keys():
-    print("In %s, freq of 'fuck' = %f" % (c, models[c].transform("fuck")))
+    print("In %s, freq of '%s' = %f" % (c, w, models[c].transform("%s" % w)))
