@@ -98,7 +98,7 @@ python geodist_eval.py
 
 
 ## Citation
-Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis. To appear in *Proceedings of the Society for Computation in Linguistics*. New Orleans: Linguistic Society of America. 
+Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. [DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis](https://arxiv.org/abs/1910.01818). To appear in *Proceedings of the Society for Computation in Linguistics*. New Orleans: Linguistic Society of America. 
 
 ```
 @inproceedings{Jiang:Hong:Chen:Kulkarni:2020:SCiL,
