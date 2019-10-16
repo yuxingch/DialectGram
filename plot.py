@@ -13,7 +13,7 @@ from tqdm import tqdm
 import plotly.graph_objects as go
 from us_state_abbrev import us_state_abbrev
 
-THRESHOLD = 100
+THRESHOLD = 15
 
 class ColorBar:
 
@@ -119,8 +119,10 @@ def main():
         fig = go.Figure(data=go.Choropleth(
             locations=plotDf['state'],
             z=plotDf['value1'],
+            # zmax=1.0,
+            # zmin=0.0,
             locationmode='USA-states',
-            colorscale='Blues',
+            colorscale="Blues",
             autocolorscale=False,
             text=plotDf['state'],  # hover text
             marker_line_color='white',  # line markers between states

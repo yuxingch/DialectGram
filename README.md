@@ -27,19 +27,21 @@ A novel method to learn dialect-sensitive word embeddings from region-agnostic d
 
 ## Requirements
 ### Baseline Models
-- cycler          0.10.0 
-- folium          0.10.0
-- joblib          0.13.2 
-- kiwisolver      1.1.0  
-- matplotlib      3.1.0  
-- numpy           1.16.3 
-- pandas          0.24.2 
-- pep8            1.7.1  
-- Pillow          6.0.0  
-- pip             19.1.1 
-- pyparsing       2.4.0  
-- python-dateutil 2.8.0  
-- pytz            2019.1 
+- cycler            0.10.0 
+- folium            0.10.0
+- joblib            0.13.2 
+- kiwisolver        1.1.0  
+- matplotlib        3.1.0  
+- numpy             1.16.3 
+- pandas            0.24.2 
+- pep8              1.7.1
+- plotly            4.1.1  
+- Pillow            6.0.0  
+- pip               19.1.1 
+- pyparsing         2.4.0  
+- python-dateutil   2.8.0  
+- pytz              2019.1
+- reverse_geocoder  1.5.1
 - scikit-learn    0.21.2 
 - scipy           1.3.0  
 - setuptools      41.0.1 
