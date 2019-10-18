@@ -1,9 +1,9 @@
-# DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis
+# DialectGram: Detection of Dialectal Changes with Multi-geographic Resolution Analysis
 
 ![heat-map-gas](./image/gas.png?raw=true "Word heat map of gas")
 
 ## Introduction
-We propose **DialectGram**, a method to detect dialectical variation across multiple geographic resolutions. In contrast to prior work, which requires apriori knowledge of the geographic resolution and the set of regions,  DialectGram automatically infers dialect-sensitive senses without these constraints using a nonparametric Bayesian extension of Skip-gram. Consequently, DialectGram only needs one-time training to enable an analysis of dialectical variation at multiple resolutions. To validate our approach, and establish a quantitative benchmark, we create a new corpus Geo-Tweets2019 with English tweets from the US and the UK, and new validation set DialectSim for evaluating word embeddings in American and British English. 
+Several computational models have been developed to detect and analyze dialect variation in recent years. Most of these models assume a predefined set of geographical regions over which they detect and analyze dialectal variation. However, dialect variation occurs at multiple levels of geographic resolution ranging from cities within a state, states within a country, and between countries across continents. In this work, we propose a model that enables detection of dialectal variation at multiple levels of geographic resolution obviating the need for a-priori definition of the resolution level. Our method **DialectGram**, learns dialect-sensitive word embeddings while being agnostic of the geographic resolution. Specifically it only requires one-time training and enables analysis of dialectal variation at a chosen resolution post-hoc -- a significant departure from prior models which need to be re-trained whenever the pre-defined set of regions changes. Furthermore, **DialectGram** explicitly models senses thus enabling one to estimate the proportion of each sense usage in any given region. Finally, we quantitatively evaluate our model against other baselines on a new evaluation dataset *DialectSim* (in English) and show that **DialectGram** can effectively model linguistic variation.
 
 ## Visualization Demo
 You can visualize our word maps here: [demo](https://yuxingch.github.io/DialectGram/demo/main.html)
@@ -105,7 +105,7 @@ Jiang, Hang*; Haoshen Hong*; Yuxing Chen*; and Vivek Kulkarni. 2019. [DialectGra
 ```
 @inproceedings{Jiang:Hong:Chen:Kulkarni:2020:SCiL,
   Author = {Jiang, Hang  and  Hong, Haoshen  and  Chen, Yuxing  and  Kulkarni, Vivek},
-  Title = {DialectGram: Automatic Detection of Dialectal Changes with Multi-geographic Resolution Analysis},
+  Title = {DialectGram: Detection of Dialectal Changes with Multi-geographic Resolution Analysis},
   Booktitle = {Proceedings of the Society for Computation in Linguistics},
   Location = {New Orleans},
   Publisher = {Linguistic Society of America},
